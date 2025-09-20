@@ -1,0 +1,15 @@
+local_address: "localhost:53000"
+incomming: 
+  echo1: "localhost:53001"
+  echo2: "localhost:53002"
+  echo3: "localhost:53003"
+outgoing:
+  echo1: 
+    local_address: "localhost:54000"
+    remote_address: "localhost:53001"
+  echo2: 
+    local_address: "localhost:54001"
+    remote_address: "localhost:53002"
+  echo3: 
+    local_address: "localhost:54002"
+    remote_address: "localhost:53003"

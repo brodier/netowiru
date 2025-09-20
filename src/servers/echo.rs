@@ -2,18 +2,21 @@ use tokio::{io::{AsyncReadExt, AsyncWriteExt}, net::{TcpListener, TcpStream}};
 
 pub struct Server {
     addr: String,
+    name: String,
 }
 
 impl Server {
-    pub fn new(addr: &str) -> Self {
+    pub fn new(addr: &str, name: &str) -> Self {
         Server {
             addr: addr.to_string(),
+            name: name.to_string(), 
         }
     }
 
 
     pub async fn start(&self) {
         let addr = self.addr.clone();
+        let name = self.name.clone();
         tokio::spawn(async move {
             // Bind the listener to the address
             let listener = TcpListener::bind(addr).await.unwrap();
@@ -21,15 +24,16 @@ impl Server {
             loop {
                 // The second item contains the IP and port of the new connection.
                 let (socket, _) = listener.accept().await.unwrap();
+                let name = name.clone();
                 tokio::spawn(async move {
-                    Self::process(socket).await;
+                    Self::process(socket, &name).await;
                 });
             }
         });
     }
 
 
-    async fn process(mut socket: TcpStream) {
+    async fn process(mut socket: TcpStream, name: &str) {
         loop {  
             match socket.read_u64().await {
                 Ok(0)   => {
@@ -38,7 +42,7 @@ impl Server {
                 },
                 Ok(len) => {
                     eprintln!("Length: {}", len);
-                    Self::process_message(len, &mut socket).await;
+                    Self::process_message(len, &mut socket, name).await;
                 },
                 Err(e) => {
                     eprintln!("Connection closed by client");
@@ -48,7 +52,7 @@ impl Server {
         }
     }   
     
-    async fn process_message(len: u64, socket: &mut TcpStream) {
+    async fn process_message(len: u64, socket: &mut TcpStream, name: &str) {
         let mut buf = vec![0; len as usize];
         match socket.read_exact(&mut buf).await {
             Ok(0)   => {
@@ -63,7 +67,7 @@ impl Server {
                 eprintln!("Server Failed to read length: {}", e);
             }
         }        
-        let msg = format!("Echoing back {} bytes\n", len);
+        let msg = format!("Echoing back {} bytes from {}\n", len, name);
         let len:u64 = msg.len() as u64;
         if let Err(e) = socket.write_u64(len).await {
             eprintln!("Failed to send echo length: {}", e);

@@ -1,5 +1,6 @@
-use netowiru::servers::echo::Server;
-use netowiru::clients::ping::Ping;
+use netowiru::tools::pingpong::Server;
+use netowiru::tools::pingpong::Ping;
+
 #[tokio::main]
 async fn main() {
     // Bind the listener to the address

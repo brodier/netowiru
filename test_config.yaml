@@ -1,15 +1,29 @@
-local_address: "localhost:53000"
-incomming: 
-  echo1: "localhost:53001"
-  echo2: "localhost:53002"
-  echo3: "localhost:53003"
+# Config structure for the proxy server
+# Format:
+#  incomming: 
+#    first_service_name:
+#      service_address: "local_address:port" // local service address to forward to
+#      proxy_address: "proxy_address:port" // local proxy address to listen on
+#    second_service_name:
+#      service_address: "local_address:port" // local service address to forward to
+#      proxy_address: "proxy_address:port" // local proxy address to listen on
+#  outgoing:
+#    first_service_name:
+#      service_address: "local_address:port" # local address to listen on
+#      proxy_address: "remote_address:port" # remote proxy address to connect to
+#    second_service_name:
+#      service_address: "local_address:port" # local address to listen on
+#      proxy_address: "remote_address:port" # remote proxy address to connect to
+
+incomming:
+  address: "localhost:53000"
+  services:
+    service1: "localhost:8001"
+    service2: "localhost:8002"
 outgoing:
-  echo1: 
-    local_address: "localhost:54000"
-    remote_address: "localhost:53001"
-  echo2: 
-    local_address: "localhost:54001"
-    remote_address: "localhost:53002"
-  echo3: 
-    local_address: "localhost:54002"
-    remote_address: "localhost:53003"
+  service1:
+    local_address: "localhost:8003"
+    proxy_address: "localhost:53000"
+  service2:
+    local_address: "localhost:8004"
+    proxy_address: "localhost:53000"

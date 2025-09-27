@@ -116,7 +116,7 @@ impl Server {
                     Self::process_message(len, &mut socket, name).await;
                 },
                 Err(e) => {
-                    eprintln!("Connection closed by client");
+                    eprintln!("Connection closed by client ({})", e);
                     break;
                 }
             }

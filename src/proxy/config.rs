@@ -21,7 +21,7 @@ pub struct OutgoingConfig {
 }
 // Load hashmap from config file with yaml format
 impl ProxyConfig {
-    pub fn load(config_file:String) -> Self {
+    pub fn load(config_file:&str) -> Self {
         let yaml_config = fs::read_to_string(config_file).unwrap();        
         let yaml_config = YamlLoader::load_from_str(&yaml_config).unwrap();
         let yaml_config = &yaml_config[0];

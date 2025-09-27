@@ -88,10 +88,10 @@ impl Server {
     pub async fn start(&self) {
         let addr = self.addr.clone();
         let name = self.name.clone();
-        tokio::spawn(async move {
+        let thread = tokio::spawn(async move {
             // Bind the listener to the address
-            let listener = TcpListener::bind(addr).await.unwrap();
-            eprintln!("Server listening on port 6379");
+            let listener = TcpListener::bind(&addr).await.unwrap();
+            eprintln!("Server listening on {}", addr);
             loop {
                 // The second item contains the IP and port of the new connection.
                 let (socket, _) = listener.accept().await.unwrap();
@@ -101,6 +101,7 @@ impl Server {
                 });
             }
         });
+        let _ = tokio::join!(thread);
     }
 
 

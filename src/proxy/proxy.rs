@@ -152,13 +152,18 @@ impl Proxy {
         Proxy { server: Arc::new(server), clients }
     }
 
-    pub fn start(&self) -> Vec<JoinHandle<()>> {
+    pub async fn start(&self)  {
         let mut handles = Vec::new();
         handles.push(Server::start(&self.server));
         for client in self.clients.iter() {
             handles.push(Client::start(client));
         }
-        handles
+        let thread = tokio::spawn(async move {
+            for handle in handles {
+                let _ = handle.await;
+            }   
+        });
+        let _ = tokio::join!(thread);
     }
 
 }

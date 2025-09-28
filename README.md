@@ -1,10 +1,10 @@
 WORK IN PROGESS
 
 Current available commands : 
-    - ping
-    - echo
-    - proxy
-    - sample
+- ping
+- echo
+- proxy
+- sample
 
 proxy command launch proxy based on app.yml in current path could by change by adding as argument of the command
 echo start echo server to used with the ping command that start echo client
